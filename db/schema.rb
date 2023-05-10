@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_10_030633) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_10_061057) do
   create_table "bookings", force: :cascade do |t|
     t.string "start"
     t.string "end"
@@ -21,6 +21,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_030633) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "jwt_denylist", force: :cascade do |t|
+    t.string "jti", null: false
+    t.datetime "exp", null: false
+    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
   create_table "trips", force: :cascade do |t|
@@ -37,13 +43,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_030633) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
-    t.string "password"
     t.string "role"
     t.string "firstname"
     t.string "lastname"
     t.binary "photo_data"
-    t.decimal "balance"
+    t.decimal "balance", default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", default: "", null: false
