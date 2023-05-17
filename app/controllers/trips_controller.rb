@@ -1,7 +1,8 @@
 class TripsController < ApplicationController
     before_action :set_trip, only: [:show, :update]
+    
     def index
-        @trips = Trip.all
+        @trips = Trip.where(user_id: current_user.id, status: 'pending')
         render json: @trips
     end
     
@@ -10,7 +11,7 @@ class TripsController < ApplicationController
     end
     
     def create
-        @trip = Trip.new(trip_params)
+        @trip = current_user.trips.build(trip_params)
         
         if @trip.save
             render json: @trip, status: :created
@@ -34,6 +35,6 @@ class TripsController < ApplicationController
     end
     
     def trip_params
-        params.require(:trip).permit(:start, :end, :departure, :capacity)
+        params.require(:trip).permit(:start, :end, :departure, :capacity, :status)
     end
 end

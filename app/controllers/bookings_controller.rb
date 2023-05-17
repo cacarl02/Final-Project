@@ -1,6 +1,8 @@
 class BookingsController < ApplicationController
+    before_action :set_booking, only: [:show, :update]
+
     def index
-      @bookings = Booking.all
+      @bookings = Booking.where(user_id: current_user.id, status: 'pending')
       render json: @bookings
     end
     
@@ -9,7 +11,7 @@ class BookingsController < ApplicationController
     end
     
     def create
-      @booking = Booking.new(booking_params)
+      @booking = current_user.bookings.build(booking_params)
       
       if @booking.save
         render json: @booking, status: :created
@@ -18,16 +20,12 @@ class BookingsController < ApplicationController
       end
     end
     
-    def edit
-      @booking = Booking.find(params[:id])
-    end
-    
     def update
-      
+
       if @booking.update(booking_params)
-        redirect_to @booking
+        render json: @booking
       else
-        render :edit
+        render json: @booking.errors, status: :unprocessable_entity
       end
     end
     
@@ -38,7 +36,6 @@ class BookingsController < ApplicationController
     end
     
     def booking_params
-      params.require(:booking).permit(:trip_id, :user_id, :start_date, :end_date)
+      params.require(:booking).permit(:trip_id, :user_id, :start, :end, :amount, :departure, :status)
     end
   end
-  

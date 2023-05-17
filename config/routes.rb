@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   resources :trips
   resources :bookings
   resources :users
+  resources :admin, only: [:index, :show] do
+    member do
+      patch :verify_user
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

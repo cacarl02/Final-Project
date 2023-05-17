@@ -1,9 +1,13 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:show, :update]
+    before_action :set_user, only: [:index, :show, :update]
   
     def index
-      @users = User.all
-      render json: @users
+      if @user.role === 'admin'
+        @users = User.all
+        render json: @users
+      else
+        render json: {error: "Access denied. Admin privileges required."}, status: 401
+      end
     end
   
     def show
@@ -22,6 +26,9 @@ class UsersController < ApplicationController
   
     # PATCH/PUT /users/1
     def update
+      amount = params[:amount]
+      @user.top_up(amount) #top-up balance 
+
       if @user.update(user_params)
         render json: @user
       else
@@ -36,7 +43,7 @@ class UsersController < ApplicationController
     end
   
     def user_params
-      params.require(:user).permit(:name, :email, :password)
+      params.permit(:firstname, :lastname, :balance, :photo_data, :role, :is_verified)
     end
   end
   

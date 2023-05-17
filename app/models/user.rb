@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_many :bookings
   has_many :trips
 
-  def add_balance(amount)
+  def top_up(amount)
     amount = amount.to_f
     if amount > 0
       self.balance += amount
