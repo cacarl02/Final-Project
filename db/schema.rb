@@ -37,9 +37,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_15_122511) do
     t.integer "capacity"
     t.integer "total_passengers", default: 0
     t.string "status", default: "pending"
-    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -60,5 +60,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_15_122511) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "trips", "users"
 end
