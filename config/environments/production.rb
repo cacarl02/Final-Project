@@ -83,6 +83,6 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
+  config.active_record.sqlite3_production_warning=false
   config.secret_key_base = '4e35279a2ca3cecc2a73a08192878f586b4a2edc5de5a13779a2614f844c8eb57e16c12ff2e5a9928b1a48cbcbbc99c0d090503c0c1b94318129c597d37515c0'
 end
