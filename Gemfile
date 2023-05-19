@@ -51,3 +51,4 @@ gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'simplecov', require: false, group: :test
+gem 'rest-client', '~> 2.1'
