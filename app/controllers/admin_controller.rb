@@ -15,7 +15,7 @@ class AdminController < ApplicationController
   
     def authorize_admin
       unless current_user.role == 'admin'
-        render json: { error: "Unauthorized" }, status: :unauthorized
+        render json: { error: "Access denied. Admin privileges required." }, status: :unauthorized
       end
     end
 

@@ -2,12 +2,17 @@ class BookingsController < ApplicationController
     before_action :set_booking, only: [:show, :update]
 
     def index
-      @bookings = Booking.where(user_id: current_user.id, status: 'pending')
+      @bookings = Booking.where(user_id: current_user.id).where.not(status: ['completed', 'cancelled'])
       render json: @bookings
     end
     
     def show
-      render json: @booking
+      external_data = fetch_data_from_external_api
+      if @booking.status == 'ongoing'
+        render json: { trip: @trip, external_data: external_data}
+      else
+        render json: { trip: @trip, external_data: nil }
+      end
     end
     
     def create
@@ -37,5 +42,9 @@ class BookingsController < ApplicationController
     
     def booking_params
       params.require(:booking).permit(:trip_id, :user_id, :start, :end, :amount, :departure, :status)
+    end
+
+    def fetch_data_from_external_api
+
     end
   end

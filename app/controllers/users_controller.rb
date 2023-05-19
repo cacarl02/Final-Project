@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     def index
       if @user.role === 'admin'
         @users = User.all
-        render json: @users
+        render json: @users.where.not(role: 'admin')
       else
         render json: {error: "Access denied. Admin privileges required."}, status: 401
       end
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
     end
   
     def user_params
-      params.permit(:firstname, :lastname, :balance, :photo_data, :role, :is_verified)
+      params.permit(:firstname, :lastname, :balance, :photo_data, :role)
     end
   end
   

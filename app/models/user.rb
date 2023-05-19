@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
   has_many :bookings
-  has_many :trips
+  has_many :trips, foreign_key: 'user_id', class_name: 'Trip'
 
   def top_up(amount)
     amount = amount.to_f
