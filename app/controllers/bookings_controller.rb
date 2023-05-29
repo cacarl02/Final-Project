@@ -1,9 +1,20 @@
 class BookingsController < ApplicationController
-    before_action :set_booking, only: [:show, :update]
+    before_action :set_booking, only: [:show, :update, :bookings_on_trip]
 
     def index
       @bookings = Booking.where(user_id: current_user.id).where.not(status: ['completed', 'cancelled'])
       render json: @bookings
+    end
+
+    def history
+      @bookings = Booking.where(user_id: current_user.id).where(status: ['completed', 'cancelled'])
+      render json: @bookings
+    end
+
+    def bookings_on_trip
+      @trip = Trip.find(params[:id])
+      @booking = Booking.where(trip_id: @trip.id).where(status: ['pending', 'ongoing'])
+      render json: @booking
     end
     
     def show
@@ -37,7 +48,7 @@ class BookingsController < ApplicationController
     private
 
     def set_booking
-        @booking = Booking.find(params[:id])
+      @booking = Booking.find(params[:id])
     end
     
     def booking_params

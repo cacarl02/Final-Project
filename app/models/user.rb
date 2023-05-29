@@ -9,8 +9,13 @@ class User < ApplicationRecord
 
   def top_up(amount)
     amount = amount.to_f
+
     if amount > 0
       self.balance += amount
+    else
+      errors.add(:error, "Please input a valid amount")
+      return false
     end
+    
   end
 end

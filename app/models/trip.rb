@@ -2,6 +2,7 @@ class Trip < ApplicationRecord
     has_many :bookings
     has_many :users, through: :bookings
     belongs_to :creator, class_name: 'User', foreign_key: 'user_id'
+    validates :start, :end, :departure, :capacity, presence: true
 
     validate :check_user_has_no_pending_trips, on: :create
 
@@ -23,13 +24,19 @@ class Trip < ApplicationRecord
 
     def start_trip
         if saved_change_to_status? && status_before_last_save == 'pending' && status == 'ongoing'
-
+            bookings.where(status: 'pending').each do |booking|
+                booking.status = 'ongoing'
+                booking.save
+            end
         end
     end
 
     def complete_trip
         if saved_change_to_status? && status == 'completed'
-            
+            bookings.where.not(status: 'cancelled').each do |booking|
+                booking.status = 'completed'
+                booking.save
+            end
         end
     end
 

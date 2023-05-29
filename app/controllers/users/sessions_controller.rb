@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
+  respond_to :json
   # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
@@ -28,7 +29,10 @@ class Users::SessionsController < Devise::SessionsController
   private
   
   def respond_with(resource, _opts = {})
-    render_jsonapi_response(resource)
+    render json: {
+      status: {code: 200, message: 'Logged in sucessfully.'},
+      data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+    }, status: :ok
   end
 
   def respond_to_on_destroy

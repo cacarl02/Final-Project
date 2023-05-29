@@ -28,6 +28,9 @@ class Booking < ApplicationRecord
     def return_amount_if_cancelled_booking
         if saved_change_to_status? && status_before_last_save == 'pending' && status == 'cancelled'
             user.update(balance: user.balance + amount)
+            trip.total_passengers -= 1
+            trip.total_amount -= amount
+            trip.save
         end
     end
 
@@ -51,7 +54,7 @@ class Booking < ApplicationRecord
     end
 
     def check_user_has_no_pending_bookings
-        if user.bookings.where(user_id: userid).where.not(status: ['completed', 'cancelled']).exists?
+        if user.bookings.where(user_id: user.id).where.not(status: ['completed', 'cancelled']).exists?
             errors.add(:error, 'Commuter has an existing booking')
         end
     end

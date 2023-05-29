@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:index, :show, :update]
+    before_action :set_user, only: [:show, :update, :topup_balance]
   
     def index
-      if @user.role === 'admin'
+      if current_user.role === 'admin'
         @users = User.all
-        render json: @users.where.not(role: 'admin')
+        render json: @users.where(role: ['operator', 'commuter', nil])
       else
         render json: {error: "Access denied. Admin privileges required."}, status: 401
       end
@@ -25,12 +25,22 @@ class UsersController < ApplicationController
     end
   
     # PATCH/PUT /users/1
-    def update
+    def topup_balance
       amount = params[:amount]
-      @user.top_up(amount) #top-up balance 
+      if @user.top_up(amount)
+        if @user.update(user_params)
+          render json: { user: @user, message: 'Balance updated successfully.'}
+        else
+          render json: @user.errors, status: :unprocessable_entity
+        end
+      else
+        render json: { error: @user.errors.full_messages.first }, status: :unprocessable_entity
+      end
+    end
 
+    def update
       if @user.update(user_params)
-        render json: @user
+        render json: { user: @user, message: 'User updated successfully.'}
       else
         render json: @user.errors, status: :unprocessable_entity
       end

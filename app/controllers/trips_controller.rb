@@ -5,6 +5,16 @@ class TripsController < ApplicationController
         @trips = Trip.where(user_id: current_user.id).where.not(status: ['completed', 'cancelled'])
         render json: @trips
     end
+
+    def history
+        @trips = Trip.where(user_id: current_user.id).where(status: ['completed', 'cancelled'])
+        render json: @trips
+    end
+
+    def pending_trips
+        @trips = Trip.where(status: 'pending')
+        render json: @trips
+    end
     
     def show
         render json: @trip

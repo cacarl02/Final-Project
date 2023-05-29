@@ -1,7 +1,7 @@
 
 class ApplicationController < ActionController::API
   before_action :authenticate_user!, unless: -> { request.format.json? }
-  before_action :check_verification_status!, unless: -> { request.format.json? }
+  before_action :check_verification_status!, unless: -> { request.format.json? || controller_name == 'users' }
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
