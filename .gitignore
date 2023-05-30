@@ -34,3 +34,4 @@
 echo coverage >> .gitignore
 
 /config/credentials/production.key
+coverage
