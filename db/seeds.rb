@@ -9,6 +9,6 @@ admin_user = User.create(
   email: 'admin@admin.com',
   password: 'password',
   password_confirmation: 'password',
-  role: :admin,
+  role: 'admin',
   is_verified: true
 )
